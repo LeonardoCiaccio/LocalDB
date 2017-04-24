@@ -1,4 +1,4 @@
-## Local DB
+## [Local DB](https://leonardociaccio.github.io/LocalDB/)
 
 Una libreria molto utile per la gestione dei dati in locale, utilizzando solo il `localStorage` oppure il `sessionStorage`.
 L'utilizzo è davvero molto semplice, vediamo come interagire con LocalDB :
@@ -14,7 +14,7 @@ var db = new window.localdb( {} );
 
 ```
 
-Si possono passare dei parametri che definiscono le opzioni di gestione del DB, questi i parametri di base, massima flessibilità di gestione :
+Si possono passare dei parametri che definiscono le opzioni di gestione del DB, questi sono i parametri di base, massima flessibilità di gestione :
 
 
 ```javascript
