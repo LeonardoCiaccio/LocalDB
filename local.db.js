@@ -1,4 +1,4 @@
-/* 1.0.0.3 leonardo.ciaccio@gmail.com
+/* 1.0.0.4 leonardo.ciaccio@gmail.com
 
 	Nome db + sign + nome tabella = "Negozio-Clienti" ; "Negozio-"
 	
@@ -631,8 +631,6 @@
 		
 		//if( !opt.sortby )opt.sortby = "#";
 		
-		opt.sensitive = opt.sensitive || false;
-		
 		var response = [];
 		
 	// --> Prelevo la tabella, potrebbe essere []
@@ -654,7 +652,7 @@
 					if( typeof a[ opt.sortby ] === "string" && typeof b[ opt.sortby ] === "string" ){
 
 					// --> Per i caratteri non ascii
-
+						
 						return a[ opt.sortby ].localeCompare( b[ opt.sortby ] );
 
 					}
@@ -670,7 +668,7 @@
 					if( typeof a[ opt.sortby ] === "string" && typeof b[ opt.sortby ] === "string" ){
 
 					// --> Per i caratteri non ascii
-
+						
 						return b[ opt.sortby ].localeCompare( a[ opt.sortby ] );
 
 					}

@@ -206,7 +206,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-        <script src="local.db.1.0.0.3.min.js"></script>
+        <script src="local.db.js"></script>
 
         <script>		
 			
@@ -683,13 +683,15 @@
 						
 						if( $( ".ui.checkbox.orfilter").checkbox( "is checked" ) ){
 							
+						// --> .toLowerCase() per una ricerca case insensitive
+							
 							return ( 
 							
-									( fieldnome && record[ "nome" ].indexOf( fieldnome ) > -1 ) || 
-									( fieldcognome && record[ "cognome" ].indexOf( fieldcognome ) > -1 ) || 
-									( fieldeta == null || record[ "eta" ] == fieldeta ) || 
-									( fieldemail && record[ "unique" ].indexOf( fieldemail ) > -1 ) || 
-									( fieltelefono && record[ "telefono" ].indexOf( fieltelefono ) > -1 )
+									( fieldnome && record[ "nome" ].toLowerCase().indexOf( fieldnome ) > -1 ) || 
+									( fieldcognome && record[ "cognome" ].toLowerCase().indexOf( fieldcognome ) > -1 ) || 
+									( !fieldeta || record[ "eta" ] == fieldeta ) || 
+									( fieldemail && record[ "unique" ].toLowerCase().indexOf( fieldemail ) > -1 ) || 
+									( fieltelefono && record[ "telefono" ].toLowerCase().indexOf( fieltelefono ) > -1 )
 
 							);
 							
@@ -697,11 +699,11 @@
 						
 						return ( 
 							
-								( record[ "nome" ].indexOf( fieldnome ) > -1 ) && 
-								( record[ "cognome" ].indexOf( fieldcognome ) > -1 ) && 
-								( fieldeta == null || record[ "eta" ] == fieldeta ) && 
-								( record[ "unique" ].indexOf( fieldemail ) > -1 ) && 
-								( record[ "telefono" ].indexOf( fieltelefono ) > -1 )
+								( record[ "nome" ].toLowerCase().toLowerCase().indexOf( fieldnome ) > -1 ) && 
+								( record[ "cognome" ].toLowerCase().indexOf( fieldcognome ) > -1 ) && 
+								( !fieldeta || record[ "eta" ] == fieldeta ) && 
+								( record[ "unique" ].toLowerCase().indexOf( fieldemail ) > -1 ) && 
+								( record[ "telefono" ].toLowerCase().indexOf( fieltelefono ) > -1 )
 						
 						);
 						

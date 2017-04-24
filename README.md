@@ -127,8 +127,6 @@ db.invert( tablename, idfrom, idto, then );
 *
 *      sort      : "asc"
 *
-*      sensitive : false
-*
 *      sortby    : "Column Name"
 *
 *  }
@@ -171,6 +169,6 @@ db.getNextID( tableName );
 ```
 
 
-Nella cartella della release c'è un file 'test.html' dove è possibile provare la gestione di un database in locale oppure seguire un [video tutorial](http://www.youtube.com) per comprendere meglio come utilizzarlo.
+Nella cartella della release c'è un file 'test.html' dove è possibile provare la gestione di un database in locale.
 
-Se conosci bene l'Inglese e/o altre lingue potresti tradurre questo testo e/o magari fare un video tutorial, grazie.
+Se conosci bene l'Inglese e/o altre lingue potresti tradurre questo testo, grazie.
