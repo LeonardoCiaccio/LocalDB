@@ -1,0 +1,825 @@
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <!-- Standard Meta -->
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+        <!-- Site Properties -->
+
+        <title>Local DB | Test</title>
+            
+        <!-- Standard and Custom Styles -->
+
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+		
+		<style>
+		
+			.ui.form.test{
+				
+				margin-bottom: 30px;
+				
+			}
+			
+			table > thead > tr > th,
+			table > tbody > tr,
+			.hoverable{
+				
+				cursor: pointer!important;
+				
+			}
+			
+			#records > tr:hover,
+			.hoverable:hover{
+				
+				background-color: grey;
+				color: white;
+				
+			}
+			
+			.clicked{
+				
+				background-color: darkgrey;
+				color: white;
+				
+			}
+			
+			table,
+			.unselectable{				
+				
+				-webkit-touch-callout: none; /* iOS Safari */
+				-webkit-user-select: none; /* Safari */
+				-khtml-user-select: none; /* Konqueror HTML */
+				-moz-user-select: none; /* Firefox */
+				-ms-user-select: none; /* Internet Explorer/Edge */
+				user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+				
+			}
+			
+			.dropdown.database{
+				
+				margin-top: 15px;
+				margin-bottom: 30px;
+				
+			}
+			
+			.column.console{
+				
+				padding-left: 20px!important;
+				
+			}
+			
+			.column.console > button{
+				
+				margin-bottom: 10px!important;
+				
+			}
+		
+		</style>		
+		
+    </head>
+
+    <body>
+
+        <div class="ui grid" style="margin-top:30px;margin-bottom:30px;">
+        
+            <div class="three wide column console">
+            
+				<button class="ui button loginpassword">
+				  <i class="user icon"></i>
+				  Login
+				</button>
+				
+				<button class="ui button removepassword">
+				  <i class="lock icon"></i>
+				  Cambia
+				</button>
+            
+            </div>
+            
+            <div class="ten wide column">
+            
+				<h1 class="ui header"></h1>
+				
+                <div class="ui form test">
+					
+					<div id="tables" class="ui selection dropdown database">
+					  <input type="hidden" name="table" value="Clienti">
+					  <i class="dropdown icon"></i>
+					  <div class="default text">Tabelle</div>
+					  <div class="menu">
+						<div class="item" data-value="Clienti">Clienti</div>
+						<div class="item" data-value="Fornitori">Fornitori</div>
+					  </div>
+					</div>
+					
+				  <div class="five fields">
+					<div class="field">
+					  <label>Nome</label>
+					  <input id="nome" type="text">
+					</div>
+					<div class="field">
+					  <label>Cognome</label>
+					  <input id="cognome" type="text">
+					</div>
+					<div class="field">
+					  <label>Età</label>
+					  <input id="eta" type="number">
+					</div>
+					<div class="field">
+					  <label>*Email</label>
+					  <input id="email" type="text" placeholder="Valore univoco">
+					</div>
+					<div class="field">
+					  <label>Telefono</label>
+					  <input id="telefono" type="text">
+					</div>
+				  </div>
+					
+					<button id="reset" class="ui red button">
+					  <i class="refresh icon"></i>
+					  Reset
+					</button>
+					<button id="aggiungi" class="ui primary button">
+					  <i class="plus icon"></i>
+					  Aggiungi
+					</button>
+					<button id="aggiorna" class="ui green button">
+					  <i class="exchange icon"></i>
+					  Modifica
+					</button>
+					<button id="elimina" class="ui red button">
+					  <i class="remove icon"></i>
+					  Elimina
+					</button>
+					<button id="carica" class="ui button">
+					  <i class="refresh icon"></i>
+					  Carica
+					</button>	
+					<button id="filtra" class="ui button">
+					  <i class="filter icon"></i>
+					  filtra
+					</button>
+					<div class="ui toggle checkbox orfilter">
+					  <input type="checkbox" name="public">
+					  <label>OR</label>
+					</div>
+				</div>            
+			
+				<div class="row">
+
+					<table class="ui celled table single line">
+					  <thead>
+						<tr>
+						  <th class="sortlist" data-sort="#">#</th>
+						  <th class="sortlist" data-sort="nome">Nome</th>
+						  <th class="sortlist" data-sort="cognome">Cognome</th>
+						  <th class="sortlist" data-sort="eta">Età</th>
+						  <th class="sortlist" data-sort="unique">*Email</th>
+						  <th class="sortlist" data-sort="telefono">Telefono</th>
+						</tr>
+					  </thead>
+					  <tbody id="records">
+						
+					  </tbody>
+					</table>
+
+				</div>
+				
+            </div>
+			
+            <div class="three wide column">
+            
+            
+            </div>
+        
+        </div>
+        
+        
+        <!-- Standard and Custom Scripts -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+        <script src="local.db.1.0.0.3.min.js"></script>
+
+        <script>		
+			
+			( function( $ ){
+	
+				"use strict";
+				
+			// --> Necessaria se vogliamo cifrare
+				
+				var password
+				
+					,warned
+					
+					,config = {
+
+						storage : localStorage
+
+						,name 	: "Negozio"
+
+						,encrypt : function( decrypted, mypass ){
+							
+							if( !mypass )mypass = password;
+							if( !mypass )return decrypted;
+
+							return CryptoJS.AES.encrypt( decrypted, mypass );
+
+						}
+
+						,decrypt : function( encrypted, mypass ){
+							
+							if( !mypass )mypass = password;
+							if( !mypass )return encrypted;
+
+							return CryptoJS.AES.decrypt( encrypted, mypass ).toString( CryptoJS.enc.Utf8 );
+
+						}
+
+						,onerror : function( number ){
+
+							switch( number ){
+
+								case 100 : 
+
+									if( warned )return false;
+									
+									alert( "Ci sono errori nel processo di decifratura durante il prelievo del db !" );
+									
+									warned = true;
+
+									break;
+
+								case 101 : 
+
+									if( warned )return false;
+
+									alert( "Ci sono errori nel processo di cifratura durante il salvataggio del db !" );
+									
+									warned = true;
+
+									break;
+
+							} // <-- switch
+
+						} // <-- onerror
+
+						,change  : function( tablename, records, what, table ){
+
+						// --> Aggiorno lo score
+
+							score( table.length );
+
+						// --> Switch per scegliere cosa fare
+
+							switch( what ){
+
+								case "add" : 
+
+									// --> TODO
+
+									break;
+
+								case "remove" : 
+
+									// --> TODO
+
+									break;
+
+								case "update" : 
+
+									// --> TODO
+
+									break;
+
+								case "move" : 
+
+									// --> TODO
+
+									break;
+
+								case "invert" : 
+
+									// --> TODO
+
+									break;
+
+							} // <-- switch
+
+						} // <-- change
+
+					}
+				
+			// --> Il database con il quale lavorare
+				
+					,db = new window.localdb( config );
+				
+			// --> Accessori
+				
+				var cntrlIsPressed = false
+				
+				,score = function( val ){
+					
+					$( "h1" ).text( "Records : " + val );
+					
+				}
+				
+				,appendnewrecord = function( record, clicked ){
+										
+				// --> Aggiungo il record, inizio creando una nuova riga
+
+					var $newrow = $( "<tr id='tr" + record[ "#" ] + "'></tr>" );
+
+					$newrow.append( "<td data-type='id'>" + record[ "#" ] + "</td>" );
+					$newrow.append( "<td data-type='nome'>" + record[ "nome" ] + "</td>" );
+					$newrow.append( "<td data-type='cognome'>" + record[ "cognome" ] + "</td>" );
+					$newrow.append( "<td data-type='eta'>" + record[ "eta" ] + "</td>" );
+					$newrow.append( "<td data-type='email'>" + record[ "unique" ] + "</td>" );
+					$newrow.append( "<td data-type='telefono'>" + record[ "telefono" ] + "</td>" );
+
+					$newrow.click( function( evt ){
+
+					// --> Rimuovo lo stile a tutti i records
+
+						if( !cntrlIsPressed ){
+							
+							$( "tr" ).removeClass( "clicked" );
+							$( this ).toggleClass( "clicked" );
+						
+						}else{
+							
+							$( this ).toggleClass( "clicked" );
+							
+						}
+
+					// --> Aggiungo i valori al form
+						
+						var $parentemail = $( "#email" ).closest( ".field" );
+						
+						if( !cntrlIsPressed ){
+							
+							$( "#nome" ).val( $( this ).find( "[data-type='nome']" ).first().text() );
+							$( "#cognome" ).val( $( this ).find( "[data-type='cognome']" ).first().text() );
+							$( "#eta" ).val( $( this ).find( "[data-type='eta']" ).first().text() );
+							$( "#email" ).val( $( this ).find( "[data-type='email']" ).first().text() );
+							$( "#telefono" ).val( $( this ).find( "[data-type='telefono']" ).first().text() );
+							
+							$parentemail.removeClass( "disabled" );
+							
+						}else{
+							
+							$( "#nome" ).val( "" );
+							$( "#cognome" ).val( "" );
+							$( "#eta" ).val( "" );
+							$( "#email" ).val( "" );
+							$( "#telefono" ).val( "" );
+							
+							if( !$parentemail.hasClass( "disabled" ) )$parentemail.addClass( "disabled" );
+							
+						}
+
+					} );
+
+					$newrow.dblclick( function(){
+						
+						var tname = $( "#tables" ).dropdown( "get value" )
+							
+							,id   = parseInt( $( this ).find( "[data-type='id']" ).first().text() );
+						
+						if( cntrlIsPressed ){
+							
+							var $selected = $( ".clicked" );
+							
+							if( $selected.length > 2 ){
+								
+								alert( "Puoi invertire la posizione solo tra 2 records !" );
+								return false;
+								
+							}
+							
+							if( $selected.length == 2 ){
+								
+								var from = parseInt( $( $selected[ 0 ] ).find( "[data-type='id']" ).first().text() )
+									,to  = parseInt( $( $selected[ 1 ] ).find( "[data-type='id']" ).first().text() );
+								
+								db.invert( tname, from, to, function( error, record ){
+							
+									if( error == 4 ){
+
+										alert( "La destinazione è inesistente" );
+
+									}else if( error == 5 ){
+
+										alert( "Non riesco a trovare l'indice reale del record, molto strano" );
+
+									}else if( error == 6 ){
+
+										alert( "Non puoi spostare su se stesso il record !" );
+
+									}else if( error > 0 ){
+
+										alert( "Errore durante lo spostamento del record : " + error );
+
+									}
+
+									loaddb();
+
+								} );
+								
+								return false;
+								
+							}
+							
+						}
+						
+						db.move( tname, id, 0, function( error, record ){
+							
+							if( error == 4 ){
+
+								alert( "La destinazione è inesistente" );
+
+							}else if( error == 5 ){
+
+								alert( "Non riesco a trovare l'indice reale del record, molto strano" );
+
+							}else if( error == 6 ){
+
+								alert( "Non puoi spostare su se stesso il record !" );
+
+							}else if( error > 0 ){
+
+								alert( "Errore durante lo spostamento del record : " + error );
+
+							}
+							
+							loaddb();
+							
+						} );
+						
+					} );
+					
+					$( "#records" ).append( $newrow );
+					
+					if( clicked )$newrow.trigger( "click" );
+					
+				}		
+				
+				,loaddb = function( opt, filter ){
+					
+					if( !opt )opt = {};
+					
+				// --> Pulisco la lista
+					
+					$( "#records" ).html( "" );
+					
+				// --> Ciclo di caricamento
+					
+					db.query( $( "#tables" ).dropdown( "get value" ), filter, opt ).forEach( function( record ){
+						
+						appendnewrecord( record );
+						
+					} );
+					
+					if( !filter )$( "#records" ).find( "tr" ).first().trigger( "click" );
+					
+					score( db.countRecords( $( "#tables" ).dropdown( "get value" ) ) );
+					
+				};
+				
+			// --> Appena inizio devo caricare i nuovi records
+				
+				loaddb();
+				
+			// --> Resetto i campi
+				
+				$( "#reset" ).click( function(){
+					
+					$( "#nome" ).val( "" );
+					$( "#cognome" ).val( "" );
+					$( "#eta" ).val( "" );
+					$( "#email" ).val( "" );
+					$( "#telefono" ).val( "" );
+					
+					$( ".clicked" ).removeClass( "clicked" );
+					
+				} );
+				
+			// --> Ricaica il db
+				
+				$( "#carica" ).click( function(){
+					
+					loaddb();
+					
+				} );
+				
+			// --> Aggiungo un record
+				
+				$( "#aggiungi" ).click( function(){
+					
+				// --> Prelevo i dati dal form e li serializzo
+					
+					var myrecord = {
+						
+						"nome" 		: $( "#nome" ).val().trim(),
+						"cognome" 	: $( "#cognome" ).val().trim(),
+						"eta" 		: parseInt( $( "#eta" ).val() || 0 ),
+						"unique" 	: $( "#email" ).val().trim(),
+						"telefono" 	: $( "#telefono" ).val().trim()
+						
+					};
+					
+				// --> Lo aggiungo al db
+					
+					db.add( $( "#tables" ).dropdown( "get value" ), myrecord, function( error, records ){
+
+						if( error == 1 ){
+
+							alert( "Uno o più records non sono stati aggiunti perché non univoci !" );
+
+						}else if( error > 0 ){
+
+							alert( "Errore durante l'aggiunta dei records : " + error );
+
+						}
+						
+						records.forEach( function( record, i ){
+									
+							appendnewrecord( record, true );
+
+						} );
+
+					} );
+					
+				} );
+				
+			// --> Aggiorno un record
+				
+				$( "#aggiorna" ).click( function(){
+					
+				// --> Prelevo il record selezionato
+					
+					var myrecords = [],
+						$clicked  = $( ".clicked" );
+					
+					$clicked.each( function(){
+						
+						var editedrecord = {
+							
+							"#" : parseInt( $( this ).find( "[data-type='id']" ).first().text() )
+							
+						};
+						
+						if( $clicked.length == 1 ){
+							
+							editedrecord[ "nome" ] = $( "#nome" ).val().trim();
+							editedrecord[ "cognome" ] = $( "#cognome" ).val().trim();
+							editedrecord[ "eta" ] = parseInt( $( "#eta" ).val() || 0 );
+							editedrecord[ "unique" ] = $( "#email" ).val().trim();
+							editedrecord[ "telefono" ] = $( "#telefono" ).val().trim();
+							
+						}else{
+							
+							if( $( "#nome" ).val().trim() != "" )editedrecord[ "nome" ] = $( "#nome" ).val().trim();
+							if( $( "#cognome" ).val().trim() != "" )editedrecord[ "cognome" ] = $( "#cognome" ).val().trim();
+							if( $( "#eta" ).val() != "" )editedrecord[ "eta" ] = parseInt( $( "#eta" ).val() || 0 );
+							if( $( "#telefono" ).val() != "" )editedrecord[ "telefono" ] = $( "#telefono" ).val().trim();
+							
+						}
+						
+						myrecords.push( editedrecord );
+						
+					} );
+					
+					db.update( $( "#tables" ).dropdown( "get value" ), myrecords, function( error, records ){
+
+						if( error == 2 ){
+
+							alert( "Uno o più records non sono stati aggiornati perché non trovati o non univoci !" );
+
+						}else if( error > 0 ){
+
+							alert( "Errore durante l'aggiornamento dei records : " + error );
+
+						}
+						
+						records.forEach( function( record, i ){
+									
+							$( "#tr" + record[ "#" ] ).find( "[data-type='id']" ).first().text( record[ "#" ] );
+							$( "#tr" + record[ "#" ] ).find( "[data-type='nome']" ).first().text( record[ "nome" ] );
+							$( "#tr" + record[ "#" ] ).find( "[data-type='cognome']" ).first().text( record[ "cognome" ] );
+							$( "#tr" + record[ "#" ] ).find( "[data-type='eta']" ).first().text( record[ "eta" ] );
+							$( "#tr" + record[ "#" ] ).find( "[data-type='email']" ).first().text( record[ "unique" ] );
+							$( "#tr" + record[ "#" ] ).find( "[data-type='telefono']" ).first().text( record[ "telefono" ] );
+
+							$( "#tr" + record[ "#" ] ).trigger( "click" );
+
+						} );
+
+					} );
+					
+				} );
+				
+			// --> Rimuovo un record
+				
+				$( "#elimina" ).click( function(){
+					
+				// --> Prelevo il record selezionato
+					
+					var myids = [];
+					
+					$( ".clicked" ).each( function(){
+						
+						myids.push( parseInt( 
+						
+							$( this ).find( "[data-type='id']" ).first().text()
+						
+						) );
+						
+					} );
+					
+					db.remove( $( "#tables" ).dropdown( "get value" ), myids, function( error, records ){
+
+						if( error == 3 ){
+
+							alert( "Uno o più records non sono stati rimossi perché non trovati !" );
+
+						}else if( error > 0 ){
+
+							alert( "Errore durante la rimozione dei records : " + error );
+
+						}
+						
+						records.forEach( function( record, i ){
+									
+							$( "#tr" + record[ "#" ] ).remove();
+
+						} );
+
+						$( "#records" ).find( "tr" ).first().trigger( "click" );
+
+					} );
+					
+				} );
+				
+			// --> Filtra la ricerca
+				
+				$( "#filtra" ).click( function(){
+					
+					loaddb( null, function( record ){
+						
+						var fieldnome 	  = $( "#nome" ).val().trim()
+							,fieldcognome = $( "#cognome" ).val().trim()
+							,fieldeta 	  = $( "#eta" ).val() || 0
+							,fieldemail	  = $( "#email" ).val().trim()
+							,fieltelefono = $( "#telefono" ).val();
+						
+						if( $( ".ui.checkbox.orfilter").checkbox( "is checked" ) ){
+							
+							return ( 
+							
+									( fieldnome && record[ "nome" ].indexOf( fieldnome ) > -1 ) || 
+									( fieldcognome && record[ "cognome" ].indexOf( fieldcognome ) > -1 ) || 
+									( fieldeta == null || record[ "eta" ] == fieldeta ) || 
+									( fieldemail && record[ "unique" ].indexOf( fieldemail ) > -1 ) || 
+									( fieltelefono && record[ "telefono" ].indexOf( fieltelefono ) > -1 )
+
+							);
+							
+						}
+						
+						return ( 
+							
+								( record[ "nome" ].indexOf( fieldnome ) > -1 ) && 
+								( record[ "cognome" ].indexOf( fieldcognome ) > -1 ) && 
+								( fieldeta == null || record[ "eta" ] == fieldeta ) && 
+								( record[ "unique" ].indexOf( fieldemail ) > -1 ) && 
+								( record[ "telefono" ].indexOf( fieltelefono ) > -1 )
+						
+						);
+						
+					} );
+					
+				} );
+				
+			// --> Accessori comuni
+				
+				$( ".loginpassword" ).click( function(){
+					
+									
+				// --> Richiedo la password per decifrare
+					
+					var mypass = prompt( "Password !" );
+					
+					mypass = ( !mypass ) ? null : mypass.trim(); 
+					
+					if( mypass ){
+						
+					// --> Decifro tutti i db in chiaro
+					
+						var decifred = db.decryptdb( mypass );
+						
+						if( !decifred ){
+							
+							alert( "Non riesco a decifrare il DB" );
+							return false;
+							
+						}
+						
+						password = mypass;
+						
+					// --> Cifro tutti i db
+						
+						db.encryptdb();
+						
+					// --> Ricarico
+						
+						loaddb();
+						
+					}
+					
+				} );
+				
+				$( ".removepassword" ).click( function(){
+					
+									
+				// --> Cambio password ?
+					
+					var newpass = prompt( "Cambio password, inserisci la nuova password.\r\nInserisci '*' se lo vuoi in chiaro." );
+					
+					newpass = ( !newpass ) ? null : newpass.trim(); 
+					
+					if( newpass ){
+						
+					// --> Decifro tutti i db in chiaro
+					
+						var decifred = db.decryptdb();
+						
+						if( !decifred ){
+							
+							alert( "Non riesco a decifrare il DB" );
+							return false;
+							
+						}
+						
+					// --> Aggiorno la password
+						
+						password = ( newpass != "*" ) ? newpass : null;
+						
+					// --> Cifro tutti i db
+						
+						db.encryptdb();
+						
+					}
+					
+				} );
+				
+				$( ".sortlist" ).click( function(){
+					
+					$( this ).toggleClass( "sortdisc" );
+					
+					loaddb( {
+						
+						sort   : ( $( this ).hasClass( "sortdisc" ) ) ? "disc" : "asc",
+						sortby : $( this ).attr( "data-sort" ) 
+						
+					} );
+					
+				} );
+				
+				$( document ).keydown( function( event ){
+					
+					if( event.which == "17" )cntrlIsPressed = true;
+				
+				} );
+
+				$( document ).keyup( function(){
+					
+					cntrlIsPressed = false;
+				
+				} );
+				
+				$( "#tables" ).dropdown( {
+					
+					onChange : function( value, text, $choice ){
+						
+						loaddb();
+						
+					}
+					
+				} );
+				
+			} )( window.jQuery );
+			
+		</script>
+
+    </body>
+
+</html>
