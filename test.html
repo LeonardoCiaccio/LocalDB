@@ -99,7 +99,24 @@
 				  <i class="lock icon"></i>
 				  Cambia
 				</button>
+				
+				<button class="ui button exporttojson">
+				  <i class="download icon"></i>
+				  Export
+				</button>
+				
+				<button class="ui button importjson">
+				  <i class="upload icon"></i>
+				  Import
+				</button>
+				
+				<button class="ui red button rimuovidb">
+				  <i class="remove icon"></i>
+				  Rimuovi
+				</button>
             
+				<input id="import" type="file" accept=".json" hidden>
+				
             </div>
             
             <div class="ten wide column">
@@ -206,6 +223,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
         <script src="local.db.js"></script>
 
         <script>		
@@ -687,11 +705,11 @@
 							
 							return ( 
 							
-									( fieldnome && record[ "nome" ].toLowerCase().indexOf( fieldnome ) > -1 ) || 
-									( fieldcognome && record[ "cognome" ].toLowerCase().indexOf( fieldcognome ) > -1 ) || 
-									( !fieldeta || record[ "eta" ] == fieldeta ) || 
-									( fieldemail && record[ "unique" ].toLowerCase().indexOf( fieldemail ) > -1 ) || 
-									( fieltelefono && record[ "telefono" ].toLowerCase().indexOf( fieltelefono ) > -1 )
+									( fieldnome && record[ "nome" ].toLowerCase().indexOf( fieldnome.toLowerCase() ) > -1 ) || 
+									( fieldcognome && record[ "cognome" ].toLowerCase().indexOf( fieldcognome.toLowerCase() ) > -1 ) || 
+									( record[ "eta" ] == fieldeta ) || 
+									( fieldemail && record[ "unique" ].toLowerCase().indexOf( fieldemail.toLowerCase() ) > -1 ) || 
+									( fieltelefono && record[ "telefono" ].toLowerCase().indexOf( fieltelefono.toLowerCase() ) > -1 )
 
 							);
 							
@@ -699,11 +717,11 @@
 						
 						return ( 
 							
-								( record[ "nome" ].toLowerCase().toLowerCase().indexOf( fieldnome ) > -1 ) && 
-								( record[ "cognome" ].toLowerCase().indexOf( fieldcognome ) > -1 ) && 
+								( record[ "nome" ].toLowerCase().toLowerCase().indexOf( fieldnome.toLowerCase() ) > -1 ) && 
+								( record[ "cognome" ].toLowerCase().indexOf( fieldcognome.toLowerCase() ) > -1 ) && 
 								( !fieldeta || record[ "eta" ] == fieldeta ) && 
-								( record[ "unique" ].toLowerCase().indexOf( fieldemail ) > -1 ) && 
-								( record[ "telefono" ].toLowerCase().indexOf( fieltelefono ) > -1 )
+								( record[ "unique" ].toLowerCase().indexOf( fieldemail.toLowerCase() ) > -1 ) && 
+								( record[ "telefono" ].toLowerCase().indexOf( fieltelefono.toLowerCase() ) > -1 )
 						
 						);
 						
@@ -783,6 +801,39 @@
 					
 				} );
 				
+				$( ".exporttojson" ).click( function(){
+					
+					var myexport = db.export();
+					
+					if( !myexport )return alert( "Il database è vuoto" );
+					
+					var blob = new Blob( [ myexport ], { type: "text/plain;charset=utf-8" } );
+					
+					saveAs( blob, "db.json" );
+					
+				} );
+				
+				$( "#import" ).change( function( event ){
+					
+					var input = event.target;
+
+					var reader = new FileReader();
+					
+					reader.onload = function(){
+						
+						db.import( reader.result );
+						
+					};
+					reader.readAsText(input.files[0]);
+					
+				} );
+				
+				$( ".importjson" ).click( function(){
+					
+					$( "#import" ).trigger( "click" );
+					
+				} );
+				
 				$( ".sortlist" ).click( function(){
 					
 					$( this ).toggleClass( "sortdisc" );
@@ -793,6 +844,12 @@
 						sortby : $( this ).attr( "data-sort" ) 
 						
 					} );
+					
+				} );
+				
+				$( ".rimuovidb" ).click( function(){
+					
+					db.clear();
 					
 				} );
 				

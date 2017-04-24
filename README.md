@@ -166,6 +166,27 @@ db.countRecords( tableName );
 
 db.getNextID( tableName );
 
+
+/* --> Esporta tutto il database in un file .json
+*/
+
+db.export();
+
+
+/* --> Importa tutti i db da un file json
+*  
+* alldb = I db in formato string
+*  
+*/
+
+db.import( alldb );
+
+
+/* --> Cancella l'intero DB
+*/
+
+db.clear();
+
 ```
 
 

@@ -845,8 +845,92 @@
 		  	   ;
 		
 	};
+	
+/// --> Esporta il database
+	
+	localdb.prototype.export = function(){
+						
+		var storage   = options.storage
+
+			,alltable = [];
+
+	// --> Raccolgo tutte le tabelle di questo DB
+
+		for( var key in storage ){
+
+			if( key.match( new RegExp( "^" + options.name , "g" ) ) ){
+				
+				var table = {};
+				
+				table[ key ] = storage[ key ];
+				
+				alltable.push( table );
+
+			} // <-- if match
+
+		} // <-- for storage	
 		
-// --> Rendo disponibile l'oggetto
+		if( alltable.length < 1 )return null;
+		
+		return JSON.stringify( alltable );
+		
+	};
+	
+/// --> Importa un db database
+	
+	localdb.prototype.import = function( alldb ){
+						
+		var storage      = options.storage;
+
+	// --> Raccolgo tutte le tabelle di questo DB
+
+		if( typeof alldb !== "string" )throw new Error( "localdb.prototype.import : require text format alldb" );
+		
+		try{
+			
+			var allmydb = JSON.parse( alldb );
+			
+			allmydb.forEach( function( table ){
+				
+				try{
+					
+					storage[ Object.keys( table ) ] = table[ Object.keys( table ) ];
+					
+				}catch( e ){}
+				
+			} );
+			
+			return true;
+			
+		}catch( e ){
+			
+			return false;
+			
+		}
+		
+	};
+	
+/// --> Rimuove tutto il database
+	
+	localdb.prototype.clear = function(){
+						
+		var storage   = options.storage;
+
+	// --> Raccolgo tutte le tabelle di questo DB
+
+		for( var key in storage ){
+
+			if( key.match( new RegExp( "^" + options.name , "g" ) ) ){
+				
+				storage.removeItem( key );
+
+			} // <-- if match
+
+		} // <-- for storage	
+				
+	};
+		
+/// --> Rendo disponibile l'oggetto
 	
 	window.localdb = localdb;
 	
