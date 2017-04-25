@@ -548,7 +548,7 @@
 						
 						"nome" 		: $( "#nome" ).val().trim(),
 						"cognome" 	: $( "#cognome" ).val().trim(),
-						"eta" 		: parseInt( $( "#eta" ).val() || 0 ),
+						"eta" 		: parseInt( $( "#eta" ).val() ) || 0,
 						"unique" 	: $( "#email" ).val().trim(),
 						"telefono" 	: $( "#telefono" ).val().trim()
 						
@@ -575,7 +575,7 @@
 						} );
 
 					} );
-					
+				
 				} );
 				
 			// --> Aggiorno un record
@@ -807,7 +807,7 @@
 					
 					if( !myexport )return alert( "Il database è vuoto" );
 					
-					var blob = new Blob( [ myexport ], { type: "text/plain;charset=utf-8" } );
+					var blob = new Blob( [ myexport ], { type: "text/plain" } );
 					
 					saveAs( blob, "db.json" );
 					

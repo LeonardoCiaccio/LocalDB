@@ -160,26 +160,29 @@
 		
 		deepMerge : function( to, from ){
 			
-			var n;
-			
-			for( n in from ){
+			for ( var key in from) {
+				
+				try {
+					
+				// --> Compatibile con Firefox
+					
+					if ( from[ key ].constructor == Object ){
+						
+						to[ key ] = deepMerge( to[ key ], from[ key ] );
 
-				//console.log( n );
-				
-				if( typeof to[ n ] != "object" ){
-					
-					//console.log( n );
-					
-					to[ n ] = from[ n ];
-				
-				}else if( typeof from[ n ] == "object" ){
-					
-					to[ n ] = this.deepMerge( to[ n ], from[ n ] );
-				
+					}else{
+						  
+						to[ key ] = from[ key ];
+
+					}
+
+				}catch( e ){
+					  
+					to[ key ] = from[ key ];
+
 				}
-				
-			} // <-- for
-			
+			}
+
 			return to;
 			
 		} // <-- deepMerge
