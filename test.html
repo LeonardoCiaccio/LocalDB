@@ -1,294 +1,243 @@
 
 <!DOCTYPE html>
 <html>
-
-    <head>
-
-        <!-- Standard Meta -->
-
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-        <!-- Site Properties -->
-
-        <title>Local DB | Test</title>
-            
-        <!-- Standard and Custom Styles -->
-
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
-		
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<!-- Site Properties -->
+		<title>Local DB | Test</title>
+		<!-- Standard and Custom Styles -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
 		<style>
-		
+
 			.ui.form.test{
-				
+
 				margin-bottom: 30px;
-				
+
 			}
-			
+
 			table > thead > tr > th,
 			table > tbody > tr,
 			.hoverable{
-				
+
 				cursor: pointer!important;
-				
+
 			}
-			
+
 			#records > tr:hover,
 			.hoverable:hover{
-				
+
 				background-color: grey;
 				color: white;
-				
+
 			}
-			
+
 			.clicked{
-				
+
 				background-color: darkgrey;
 				color: white;
-				
+
 			}
-			
+
 			table,
 			.unselectable{				
-				
+
 				-webkit-touch-callout: none; /* iOS Safari */
 				-webkit-user-select: none; /* Safari */
 				-khtml-user-select: none; /* Konqueror HTML */
 				-moz-user-select: none; /* Firefox */
 				-ms-user-select: none; /* Internet Explorer/Edge */
 				user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-				
+
 			}
-			
+
 			.dropdown.database{
-				
+
 				margin-top: 15px;
 				margin-bottom: 30px;
-				
+
 			}
-			
+
 			.column.console{
-				
+
 				padding-left: 20px!important;
-				
+
 			}
-			
+
 			.column.console > button{
-				
+
 				margin-bottom: 10px!important;
-				
+
 			}
-		
-		</style>		
-		
-    </head>
 
-    <body>
-
-        <div class="ui grid" style="margin-top:30px;margin-bottom:30px;">
-        
-            <div class="three wide column console">
-            
+		</style>
+	</head>
+	<body>
+		<div class="ui grid" style="margin-top:30px;margin-bottom:30px;">
+			<div class="three wide column console">
 				<button class="ui button loginpassword">
-				  <i class="user icon"></i>
-				  Login
+					<i class="user icon"></i>
+					Login
+
+
 				</button>
-				
 				<button class="ui button removepassword">
-				  <i class="lock icon"></i>
-				  Cambia
+					<i class="lock icon"></i>
+					Cambia
+
+
 				</button>
-				
 				<button class="ui button exporttojson">
-				  <i class="download icon"></i>
-				  Export
+					<i class="download icon"></i>
+					Export
+
+
 				</button>
-				
 				<button class="ui button importjson">
-				  <i class="upload icon"></i>
-				  Import
+					<i class="upload icon"></i>
+					Import
+
+
 				</button>
-				
 				<button class="ui red button rimuovidb">
-				  <i class="remove icon"></i>
-				  Rimuovi
+					<i class="remove icon"></i>
+					Rimuovi
+
+
 				</button>
-            
 				<input id="import" type="file" accept=".json" hidden>
-				
-            </div>
-            
-            <div class="ten wide column">
-            
+			</div>
+			<div class="ten wide column">
 				<h1 class="ui header"></h1>
-				
-                <div class="ui form test">
-					
+				<div class="ui form test">
 					<div id="tables" class="ui selection dropdown database">
-					  <input type="hidden" name="table" value="Clienti">
-					  <i class="dropdown icon"></i>
-					  <div class="default text">Tabelle</div>
-					  <div class="menu">
-						<div class="item" data-value="Clienti">Clienti</div>
-						<div class="item" data-value="Fornitori">Fornitori</div>
-					  </div>
+						<input type="hidden" name="table" value="Clienti">
+						<i class="dropdown icon"></i>
+						<div class="default text">Tabelle</div>
+						<div class="menu">
+							<div class="item" data-value="Clienti">Clienti</div>
+							<div class="item" data-value="Fornitori">Fornitori</div>
+						</div>
 					</div>
-					
-				  <div class="five fields">
-					<div class="field">
-					  <label>Nome</label>
-					  <input id="nome" type="text">
+					<div class="five fields">
+						<div class="field">
+							<label>Nome</label>
+							<input id="nome" type="text">
+						</div>
+						<div class="field">
+							<label>Cognome</label>
+							<input id="cognome" type="text">
+						</div>
+						<div class="field">
+							<label>Età</label>
+							<input id="eta" type="number">
+						</div>
+						<div class="field">
+							<label>*Email</label>
+							<input id="email" type="text" placeholder="Valore univoco">
+						</div>
+						<div class="field">
+							<label>Telefono</label>
+							<input id="telefono" type="text">
+						</div>
 					</div>
-					<div class="field">
-					  <label>Cognome</label>
-					  <input id="cognome" type="text">
-					</div>
-					<div class="field">
-					  <label>Età</label>
-					  <input id="eta" type="number">
-					</div>
-					<div class="field">
-					  <label>*Email</label>
-					  <input id="email" type="text" placeholder="Valore univoco">
-					</div>
-					<div class="field">
-					  <label>Telefono</label>
-					  <input id="telefono" type="text">
-					</div>
-				  </div>
-					
 					<button id="reset" class="ui red button">
-					  <i class="refresh icon"></i>
-					  Reset
+						<i class="refresh icon"></i>
+						Reset
+
+
 					</button>
 					<button id="aggiungi" class="ui primary button">
-					  <i class="plus icon"></i>
-					  Aggiungi
+						<i class="plus icon"></i>
+						Aggiungi
+
+
 					</button>
 					<button id="aggiorna" class="ui green button">
-					  <i class="exchange icon"></i>
-					  Modifica
+						<i class="exchange icon"></i>
+						Modifica
+
+
 					</button>
 					<button id="elimina" class="ui red button">
-					  <i class="remove icon"></i>
-					  Elimina
+						<i class="remove icon"></i>
+						Elimina
+
+
 					</button>
 					<button id="carica" class="ui button">
-					  <i class="refresh icon"></i>
-					  Carica
-					</button>	
+						<i class="refresh icon"></i>
+						Carica
+
+
+					</button>
 					<button id="filtra" class="ui button">
-					  <i class="filter icon"></i>
-					  filtra
+						<i class="filter icon"></i>
+						filtra
+
+
 					</button>
 					<div class="ui toggle checkbox orfilter">
-					  <input type="checkbox" name="public">
-					  <label>OR</label>
+						<input type="checkbox" name="public">
+						<label>OR</label>
 					</div>
-				</div>            
-			
-				<div class="row">
-
-					<table class="ui celled table single line">
-					  <thead>
-						<tr>
-						  <th class="sortlist" data-sort="#">#</th>
-						  <th class="sortlist" data-sort="nome">Nome</th>
-						  <th class="sortlist" data-sort="cognome">Cognome</th>
-						  <th class="sortlist" data-sort="eta">Età</th>
-						  <th class="sortlist" data-sort="unique">*Email</th>
-						  <th class="sortlist" data-sort="telefono">Telefono</th>
-						</tr>
-					  </thead>
-					  <tbody id="records">
-						
-					  </tbody>
-					</table>
-
 				</div>
-				
-            </div>
-			
-            <div class="three wide column">
-            
-            
-            </div>
-        
-        </div>
-        
-        
-        <!-- Standard and Custom Scripts -->
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+				<div class="row">
+					<table class="ui celled table fixed single line">
+						<thead>
+							<tr>
+								<th class="sortlist" data-sort="#">#</th>
+								<th class="sortlist" data-sort="nome">Nome</th>
+								<th class="sortlist" data-sort="cognome">Cognome</th>
+								<th class="sortlist" data-sort="eta">Età</th>
+								<th class="sortlist" data-sort="unique">*Email</th>
+								<th class="sortlist" data-sort="telefono">Telefono</th>
+							</tr>
+						</thead>
+						<tbody id="records"></tbody>
+					</table>
+				</div>
+			</div>
+			<div class="three wide column"></div>
+		</div>
+		<!-- Standard and Custom Scripts -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
-        <script src="local.db.js"></script>
-
+		<script src="localdb.js"></script>
+		
+		
         <script>		
+			
+			/*
+			
+				var resolve = function( value ){
+
+
+
+				}
+
+				,reject		= function( reason ){
+
+
+
+				};
+			
+			*/
 			
 			( function( $ ){
 	
 				"use strict";
+			
+			/// --> Configuro e inizializzo
 				
-			// --> Necessaria se vogliamo cifrare
-				
-				var password
-				
-					,warned
-					
-					,config = {
+				var config = {
 
 						storage : localStorage
 
 						,name 	: "Negozio"
-
-						,encrypt : function( decrypted, mypass ){
-							
-							if( !mypass )mypass = password;
-							if( !mypass )return decrypted;
-
-							return CryptoJS.AES.encrypt( decrypted, mypass );
-
-						}
-
-						,decrypt : function( encrypted, mypass ){
-							
-							if( !mypass )mypass = password;
-							if( !mypass )return encrypted;
-
-							return CryptoJS.AES.decrypt( encrypted, mypass ).toString( CryptoJS.enc.Utf8 );
-
-						}
-
-						,onerror : function( number ){
-
-							switch( number ){
-
-								case 100 : 
-
-									if( warned )return false;
-									
-									alert( "Ci sono errori nel processo di decifratura durante il prelievo del db !" );
-									
-									warned = true;
-
-									break;
-
-								case 101 : 
-
-									if( warned )return false;
-
-									alert( "Ci sono errori nel processo di cifratura durante il salvataggio del db !" );
-									
-									warned = true;
-
-									break;
-
-							} // <-- switch
-
-						} // <-- onerror
 
 						,change  : function( tablename, records, what, table ){
 
@@ -338,11 +287,11 @@
 				
 			// --> Il database con il quale lavorare
 				
-					,db = new window.localdb( config );
+				,db = new window.localdb( config )
 				
 			// --> Accessori
 				
-				var cntrlIsPressed = false
+				,cntrlIsPressed = false
 				
 				,score = function( val ){
 					
@@ -426,31 +375,38 @@
 							if( $selected.length == 2 ){
 								
 								var from = parseInt( $( $selected[ 0 ] ).find( "[data-type='id']" ).first().text() )
-									,to  = parseInt( $( $selected[ 1 ] ).find( "[data-type='id']" ).first().text() );
 								
-								db.invert( tname, from, to, function( error, record ){
-							
-									if( error == 4 ){
-
-										alert( "La destinazione è inesistente" );
-
-									}else if( error == 5 ){
-
-										alert( "Non riesco a trovare l'indice reale del record, molto strano" );
-
-									}else if( error == 6 ){
-
-										alert( "Non puoi spostare su se stesso il record !" );
-
-									}else if( error > 0 ){
-
-										alert( "Errore durante lo spostamento del record : " + error );
-
-									}
+								,to  = parseInt( $( $selected[ 1 ] ).find( "[data-type='id']" ).first().text() )
+								
+								,resolve = function( inverted ){
 
 									loaddb();
 
-								} );
+								}
+
+								,reject	 = function( reason ){
+
+									if( reason == 4 ){
+
+										alert( "La destinazione è inesistente" );
+
+									}else if( reason == 5 ){
+
+										alert( "Non riesco a trovare l'indice reale del record, molto strano" );
+
+									}else if( reason == 6 ){
+
+										alert( "Non puoi spostare su se stesso il record !" );
+
+									}else if( reason > 0 ){
+
+										alert( "Errore durante lo spostamento del record : " + reason );
+
+									}
+
+								};
+								
+								db.invert( tname, from, to ).then( resolve, reject );
 								
 								return false;
 								
@@ -458,29 +414,35 @@
 							
 						}
 						
-						db.move( tname, id, 0, function( error, record ){
-							
-							if( error == 4 ){
+						var resolve = function( moved ){
+
+							loaddb();
+
+						}
+
+						,reject		= function( reason ){
+
+							if( reason == 4 ){
 
 								alert( "La destinazione è inesistente" );
 
-							}else if( error == 5 ){
+							}else if( reason == 5 ){
 
 								alert( "Non riesco a trovare l'indice reale del record, molto strano" );
 
-							}else if( error == 6 ){
+							}else if( reason == 6 ){
 
 								alert( "Non puoi spostare su se stesso il record !" );
 
-							}else if( error > 0 ){
+							}else if( reason > 0 ){
 
-								alert( "Errore durante lo spostamento del record : " + error );
+								alert( "Errore durante lo spostamento del record : " + reason );
 
 							}
-							
-							loaddb();
-							
-						} );
+
+						};
+						
+						db.move( tname, id, 0 ).then( resolve, reject );
 						
 					} );
 					
@@ -500,21 +462,79 @@
 					
 				// --> Ciclo di caricamento
 					
-					db.query( $( "#tables" ).dropdown( "get value" ), filter, opt ).forEach( function( record ){
+					var resolve = function( response ){
+
+						response.forEach( function( record ){
 						
-						appendnewrecord( record );
-						
-					} );
+							appendnewrecord( record );
+
+						} );
+
+					}
+					
+				// --> Potrebbero esserci problemi, obblighiamo una sola visualizzazione
+					
+					,reject		= function( reason ){
+
+						if( !reject.showed )alert( "Ci sono problemi nel processo di ricerca :(" );
+							
+						reject.showed = true;
+
+					};
+					
+					db.query( $( "#tables" ).dropdown( "get value" ), filter, opt ).then( resolve, reject );
 					
 					if( !filter )$( "#records" ).find( "tr" ).first().trigger( "click" );
 					
-					score( db.countRecords( $( "#tables" ).dropdown( "get value" ) ) );
+				// --> Diverso modo di lavorare con 'Promise'
 					
-				};
+					db.countRecords( $( "#tables" ).dropdown( "get value" ) ).then( function resolve( value ){
+						
+						score( value );
+						
+					}, function reject( reason ){
+						
+						//alert( "Non riesco a contare i records nella tabella : " + reason );
+						
+					} );
+					
+				}
+				
+				;
 				
 			// --> Appena inizio devo caricare i nuovi records
 				
-				loaddb();
+				db.isEncrypted().then( function resolve( args ){
+					
+					var tablesnum = args[ 0 ]
+					
+					, cryptednum  = args[ 1 ];
+					
+					if( tablesnum > 0 ){
+						
+						if( tablesnum == cryptednum ){
+							
+							alert( "Il database è cryptato, devi fare il login !" );
+							
+						}else if( cryptednum && ( tablesnum - cryptednum ) > 0 ){
+							
+							alert( "Non tutto il database è cryptato, devi fare il login !" );
+							
+						}else{
+							
+							loaddb();
+							
+						}
+						
+					}
+					
+				}, function reject(){
+					
+					alert( "Problemi durante la fase di apertura !" );
+					
+				} );
+				
+			/// --> Lista eventi interfaccia e console
 				
 			// --> Resetto i campi
 				
@@ -556,25 +576,31 @@
 					
 				// --> Lo aggiungo al db
 					
-					db.add( $( "#tables" ).dropdown( "get value" ), myrecord, function( error, records ){
+					var resolve = function( records ){
 
-						if( error == 1 ){
-
-							alert( "Uno o più records non sono stati aggiunti perché non univoci !" );
-
-						}else if( error > 0 ){
-
-							alert( "Errore durante l'aggiunta dei records : " + error );
-
-						}
-						
 						records.forEach( function( record, i ){
 									
 							appendnewrecord( record, true );
 
 						} );
 
-					} );
+					}
+
+					,reject = function( reason ){
+
+						alert( "Ci sono problemi nel processo di aggiunta al db : " + reason );
+
+					};
+					
+					db.add( $( "#tables" ).dropdown( "get value" ), myrecord )
+					
+						.then( resolve, reject )	
+					
+						.catch( function( reason ){
+
+							alert( "Ci sono problemi nel processo di aggiunta alla lista : " + reason );
+
+						} );
 				
 				} );
 				
@@ -616,18 +642,8 @@
 						
 					} );
 					
-					db.update( $( "#tables" ).dropdown( "get value" ), myrecords, function( error, records ){
+					var resolve = function( records ){
 
-						if( error == 2 ){
-
-							alert( "Uno o più records non sono stati aggiornati perché non trovati o non univoci !" );
-
-						}else if( error > 0 ){
-
-							alert( "Errore durante l'aggiornamento dei records : " + error );
-
-						}
-						
 						records.forEach( function( record, i ){
 									
 							$( "#tr" + record[ "#" ] ).find( "[data-type='id']" ).first().text( record[ "#" ] );
@@ -641,7 +657,23 @@
 
 						} );
 
-					} );
+					}
+
+					,reject = function( reason ){
+
+						alert( "Ci sono problemi nel processo di aggiornamento del database : " + reason );
+
+					};
+					
+					db.update( $( "#tables" ).dropdown( "get value" ), myrecords )
+					
+						.then( resolve, reject )	
+					
+						.catch( function( reason ){
+
+							alert( "Ci sono problemi nel processo di aggiornamento alla lista : " + reason );
+
+						} );
 					
 				} );
 				
@@ -663,19 +695,9 @@
 						
 					} );
 					
-					db.remove( $( "#tables" ).dropdown( "get value" ), myids, function( error, records ){
+					var resolve = function( deleted ){
 
-						if( error == 3 ){
-
-							alert( "Uno o più records non sono stati rimossi perché non trovati !" );
-
-						}else if( error > 0 ){
-
-							alert( "Errore durante la rimozione dei records : " + error );
-
-						}
-						
-						records.forEach( function( record, i ){
+						deleted.forEach( function( record, i ){
 									
 							$( "#tr" + record[ "#" ] ).remove();
 
@@ -683,7 +705,15 @@
 
 						$( "#records" ).find( "tr" ).first().trigger( "click" );
 
-					} );
+					}
+
+					,reject		= function( reason ){
+
+						alert( "Ci sono errori nella rimozione dei records : " + reason );
+
+					};
+					
+					db.remove( $( "#tables" ).dropdown( "get value" ), myids ).then( resolve, reject );
 					
 				} );
 				
@@ -740,28 +770,35 @@
 					
 					mypass = ( !mypass ) ? null : mypass.trim(); 
 					
-					if( mypass ){
+					if( mypass &&  mypass != "" ){
 						
-					// --> Decifro tutti i db in chiaro
-					
-						var decifred = db.decryptdb( mypass );
-						
-						if( !decifred ){
+					// --> Decifro il db in chiaro
+										
+						db.decryptdb( mypass ).then( function resolve(){
+													
+							db.password = mypass;
+
+						// --> Cifro tutti i db
+
+							db.encryptdb( mypass ).then( function(){
+
+								//alert( "Le credenziali sono corrette !" );
+
+							}, function(){
+
+								alert( "Problemi nel processo di cifratura del DB" );
+
+							} );
+
+						// --> Ricarico
+
+							loaddb();
 							
-							alert( "Non riesco a decifrare il DB" );
-							return false;
+						}, function reject(){
 							
-						}
-						
-						password = mypass;
-						
-					// --> Cifro tutti i db
-						
-						db.encryptdb();
-						
-					// --> Ricarico
-						
-						loaddb();
+							alert( "La password è sbagliata !" );
+							
+						} );
 						
 					}
 					
@@ -776,26 +813,45 @@
 					
 					newpass = ( !newpass ) ? null : newpass.trim(); 
 					
-					if( newpass ){
+					if( newpass && newpass != "" ){
 						
 					// --> Decifro tutti i db in chiaro
-					
-						var decifred = db.decryptdb();
 						
-						if( !decifred ){
+						db.decryptdb( db.password ).then( function resolve(){
+						
+						// --> Aggiorno la password
+
+							db.password = ( newpass != "*" ) ? newpass : null ;
+
+						// --> Cifro tutti i db
+
+							db.encryptdb( db.password ).then( function(){
+
+								if( newpass != "*" ){
+									
+									alert( "Password modificata !" );
+									
+								}else{
+									
+									alert( "Rimossa la cifratura, DB in chiaro" );
+									
+								}
+
+							}, function(){
+
+								alert( "Problemi nel processo di cifratura del DB" );
+
+							} );
+
+						// --> Ricarico
+
+							loaddb();
 							
-							alert( "Non riesco a decifrare il DB" );
-							return false;
+						}, function reject(){
 							
-						}
-						
-					// --> Aggiorno la password
-						
-						password = ( newpass != "*" ) ? newpass : null;
-						
-					// --> Cifro tutti i db
-						
-						db.encryptdb();
+							alert( "La password è sbagliata !" );
+							
+						} );
 						
 					}
 					
@@ -803,13 +859,23 @@
 				
 				$( ".exporttojson" ).click( function(){
 					
-					var myexport = db.export();
+					var resolve = function( myexport ){
+						
+						if( !myexport )return alert( "Il database è vuoto" );
 					
-					if( !myexport )return alert( "Il database è vuoto" );
+						var blob = new Blob( [ myexport ], { type: "text/plain" } );
+
+						saveAs( blob, "db." + new Date().toISOString().slice( 0, 10 ).replace( /\-/gi, "." ) + ".json" );
+						
+					}
 					
-					var blob = new Blob( [ myexport ], { type: "text/plain" } );
+					,reject		= function( reason ){
+						
+						alert( "Problemi nell'esportare il db" );
+						
+					};
 					
-					saveAs( blob, "db.json" );
+					db.export().then( resolve, reject );
 					
 				} );
 				
@@ -821,7 +887,19 @@
 					
 					reader.onload = function(){
 						
-						db.import( reader.result );
+						var resolve = function( value ){
+							
+							loaddb();
+														
+						}
+						
+						,reject = function( reason ){
+							
+							alert( reason );
+							
+						};
+						
+						db.import( reader.result ).then( resolve, reject );
 						
 					};
 					reader.readAsText(input.files[0]);
@@ -849,7 +927,21 @@
 				
 				$( ".rimuovidb" ).click( function(){
 					
-					db.clear();
+					var resolve = function( name ){
+						
+						loaddb();
+						
+						alert( "Il DB " + name + " è stato rimosso con successo !" );
+						
+					}
+					
+					,reject		= function( reason ){
+						
+						alert( "Problemi durante il processo di rimozione" );
+						
+					};
+					
+					db.clear().then( resolve, reject );
 					
 				} );
 				
@@ -878,7 +970,6 @@
 			} )( window.jQuery );
 			
 		</script>
-
-    </body>
-
+		
+	</body>
 </html>

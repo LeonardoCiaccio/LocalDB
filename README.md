@@ -1,20 +1,9 @@
-## [Local DB](https://leonardociaccio.github.io/LocalDB/)
+## [LocalDB](https://leonardociaccio.github.io/LocalDB/)
 
-Una libreria molto utile per la gestione dei dati in locale, utilizzando solo il `localStorage` oppure il `sessionStorage`.
-L'utilizzo è davvero molto semplice, vediamo come interagire con LocalDB :
+Una libreria molto utile per la gestione dei dati in locale ( offline ), utilizzando solo il `localStorage` oppure il `sessionStorage`.
+L'utilizzo è davvero molto semplice, con pochissime riche di codice si possono creare app molto performanti, l'integrazione con `Promise` che in questa versione viene proposta con una copia di [lie.js](https://github.com/calvinmetcalf/lie) lo rende ancora più intuitivo e pulito.
 
-### La definizione
-
-Creando una nuova istanza si crea un nuovo DB o un riferimento ad uno esistente, il pivot è il nome :
-
-
-```javascript
-
-var db = new window.localdb( {} );
-
-```
-
-Si possono passare dei parametri che definiscono le opzioni di gestione del DB, questi sono i parametri di base, massima flessibilità di gestione :
+Creando una nuova istanza si crea un nuovo DB o un riferimento ad uno esistente, il pivot è il nome stesso.
 
 
 ```javascript
@@ -25,170 +14,136 @@ var db = new window.localdb( {
 
     storage: localStorage
 
+	,
+	
 // --> Il nome del database
 
-        ,
-    name: "MyDB"
+    name: "LocalDB"
+	
+	,
 
-// --> Errore generico
+// --> Questa funzione viene chiamata ogni volta che ci sono variazioni
 
-        ,
-    onerror: function(number) {}
-
-// --> Chiamata ogni volta che ci sono variazioni
-
-        ,
-    change: function(tablename, recordschanged, eventname, mytableobj) {}
-
-// --> Incapsula un processo di cifratura
-
-        ,
-    encrypt: function(decrypted, mypass) {
-
-        return decrypted;
-
-    }
-
-// --> Incapsula un processo di decifratura
-
-        ,
-    decrypt: function(encrypted, mypass) {
-
-        return encrypted;
-
-    }
+    change: function( tablename, recordschanged, eventname, mytableobj ) {}
 
 } );
 
 ```
 
-Il database espone alcune funzioni dopo essere istanziata :
+### LocalDB espone alcune funzioni, solo dopo essere stata istanziata 
+
+I nomi delle funzioni e i parametri descrivono e rendono l'idea di cosa fanno, in perfetto stile `Promise`
 
 ```javascript
 
-/* --> Aggiunge uno o più records nel database 
-*  
-*  tablename = Il nome della tabella con cui si vuole lavorare
-*  records   = Un array di oggetti, sono i records della tabella
-*  then      = Callback eseguita alla fine della procedura, vengono passati
-*              2 parametri, il numero dell'eventuale errore e i records in esame
-*  
-*/
 
-db.add( tablename, records, then );
+db.name
 
+db.password;
 
-/* --> Modifica uno o più records nel database 
-*  
-* Parametri identici al '.add'
-*  
-*/
+db.change( tablename, recordschanged, eventname, mytableobj );
 
-db.update( tablename, records, then );
+db.add( tablename, records ).then( resolve, reject );
 
+db.update( tablename, records ).then( resolve, reject );
 
-/* --> Rimuove uno o più records nel database 
-*  
-* Parametri identici al '.add' ad eccezzione del :
-* ids = Array di numeri corrispondenti agli ID ( non indici ) dei records
-*/
+db.remove( tablename, ids ).then( resolve, reject );
 
-db.remove( tablename, ids, then );
+db.move( tablename, idfrom, idto ).then( resolve, reject );
 
+db.invert( tablename, idfrom, idto ).then( resolve, reject );
 
-/* --> Sposta uno record nel database nell'indice reale 
-*  
-* Parametri identici al '.add' ad eccezzione di :
-* idfrom = Intero che identifica l'ID da spostare
-* idto   = Intero che identifica l'ID da cui prendere il posto
-*/
+db.query( tablename, condition, opt ).then( resolve, reject );
 
-db.move( tablename, idfrom, idto, then );
+db.encryptdb( mypass ).then( resolve, reject );
 
+db.decryptdb( mypass ).then( resolve, reject );
 
-/* --> Cambia di posto 2 record nell'indice reale
-*  
-* Parametri identici al '.move'
-*  
-*/
+db.countRecords( tableName ).then( resolve, reject );
 
-db.invert( tablename, idfrom, idto, then );
+db.export().then( resolve, reject );
 
+db.import( alldb ).then( resolve, reject );
 
-/* --> Effettua una ricerca nel DB
-*  
-*  tablename = Il nome della tabella con cui si vuole lavorare
-*  condition = Callback per filtrare
-*  opt       = {
-*
-*      offset    : 0
-*
-*      limit     : 0
-*
-*      sort      : "asc"
-*
-*      sortby    : "Column Name"
-*
-*  }
-*  
-*/
+db.clear().then( resolve, reject );
 
+db.isEncrypted().then( resolve, reject );
 
-db.query( tablename, condition, opt );
-
-
-/* --> Cifra l'intero database se è stata incapsulata la funzione di cifratura
-*  
-* mypass = La password con cui cifrare
-*  
-*/
-
-db.encryptdb( mypass );
-
-
-/* --> Decifra l'intero database se è stata incapsulata la funzione di decifratura
-*  
-* mypass = La password con cui decifrare
-*  
-*/
-
-db.decryptdb( mypass );
-
-
-/* --> Restituisce il numero di records della tabella richiesta
-*/
-
-db.countRecords( tableName );
-
-
-/* --> Restituisce il prossimo ID che verrà utilizzato per un nuovo record
-*/
-
-db.getNextID( tableName );
-
-
-/* --> Esporta tutto il database in un file .json
-*/
-
-db.export();
-
-
-/* --> Importa tutti i db da un file json
-*  
-* alldb = I db in formato string
-*  
-*/
-
-db.import( alldb );
-
-
-/* --> Cancella l'intero DB
-*/
-
-db.clear();
 
 ```
 
+ed ecco un semplice esempio
+
+
+```javascript
+
+var negozio1 = new localdb( {
+
+	name : "Il Mio Negozio 1"
+	
+	,
+	
+	change : function( tablename, recordschanged, eventname, mytableobj ){
+	
+		console.log( "DB 'Il Mio Negozio 1' [" + tablename + "] modificato !" );
+	
+	}
+
+} );
+
+var negozio2 = new localdb( {
+
+	name : "Il Mio Negozio 2"
+	
+	,
+	
+	change : function( tablename, recordschanged, eventname, mytableobj ){
+	
+		console.log( "DB 'Il Mio Negozio 2' [" + tablename + "] modificato !" );
+	
+	}
+
+} );
+
+negozio1.password = "Password solo per 'Il Mio Negozio 1'";
+
+// --> La colonna unique è riservata e deve essere univoca, comunque è opzionale
+
+var clients1 = [
+
+	{ nome : "Leonardo", cognome : "Ciaccio", unique : "leonardo.ciaccio@gmail.com" }
+
+];
+
+negozio1.add( "Clienti", clients1 ).then( function resolve( records ){
+
+	console.log( "N1 : Sono stati aggiunti " + records.length + " records !" );
+
+}, function reject( reason ){
+
+	console.log( "N1 : Ci sono errori : " + reason );
+
+} );
+
+var clients2 = [
+
+	{ nome : "Mario", cognome : "Ciaccio", unique : "" }
+
+];
+
+negozio2.add( "Clienti", clients2 ).then( function resolve( records ){
+
+	console.log( "N2 : Sono stati aggiunti " + records.length + " records !" );
+
+}, function reject( reason ){
+
+	console.log( "N2 : Ci sono errori : " + reason );
+
+} );
+
+```
+
+Dopo questa operazione il `localStorage` contiene i valori delle nostre tabelle di cui una cifrata, infatti se il valore di `.password` è diverso da `null` cifra l'intero DB, non deve mai essere `undefined`, ogni instanza ha la propria logica indipendente senza influenze tra di loro.
 
 Nella cartella della release c'è un file 'test.html' dove è possibile provare la gestione di un database in locale.
 
