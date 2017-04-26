@@ -1,7 +1,7 @@
 ## [LocalDB](https://leonardociaccio.github.io/LocalDB/)
 
 Una libreria molto utile per la gestione dei dati in locale ( offline ), utilizzando solo il `localStorage` oppure il `sessionStorage`.
-L'utilizzo è davvero molto semplice, con pochissime riche di codice si possono creare app molto performanti, l'integrazione con `Promise` che in questa versione viene proposta con una copia di [lie.js](https://github.com/calvinmetcalf/lie) lo rende ancora più intuitivo e pulito.
+L'utilizzo è davvero molto semplice, con pochissime righe di codice si possono creare app molto performanti, l'integrazione con `Promise` che in questa versione viene proposta con una copia di [lie.js](https://github.com/calvinmetcalf/lie) lo rende ancora più intuitivo e pulito.
 
 Creando una nuova istanza si crea un nuovo DB o un riferimento ad uno esistente, il pivot è il nome stesso.
 
@@ -145,6 +145,6 @@ negozio2.add( "Clienti", clients2 ).then( function resolve( records ){
 
 Dopo questa operazione il `localStorage` contiene i valori delle nostre tabelle di cui una cifrata, infatti se il valore di `.password` è diverso da `null` cifra l'intero DB, non deve mai essere `undefined`, ogni instanza ha la propria logica indipendente senza influenze tra di loro.
 
-Nella cartella della release c'è un file 'test.html' dove è possibile provare la gestione di un database in locale.
+Nella cartella della release c'è un file `test.html` dove è possibile provare la gestione di un database in locale.
 
 Se conosci bene l'Inglese e/o altre lingue potresti tradurre questo testo, grazie.
