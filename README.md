@@ -37,6 +37,8 @@ I nomi delle funzioni e i parametri descrivono e rendono l'idea di cosa fanno, i
 ```javascript
 
 
+db.dev
+
 db.name
 
 db.password;

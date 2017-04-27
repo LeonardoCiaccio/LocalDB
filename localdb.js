@@ -1,4 +1,4 @@
-/* 1.0.0.5 leonardo.ciaccio@gmail.com
+/* 
 
 	Nome db + sign + nome tabella = "Negozio-Clienti" ; "Negozio-"
 	
@@ -72,6 +72,36 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 /// --> Global, opzioni e strumenti di classe
 
 	var sign = ":"
+	
+	,dev = {
+		
+		version : "1.0.0.5"
+		
+		,
+		
+		author  : "Leonardo Ciaccio"
+		
+		,
+		
+		contact : "leonardo.ciaccio@gmail.com"
+		
+		,
+		
+		license : "MIT" 
+		
+		,
+		
+		credits : [
+			
+			"code.google.com/p/crypto-js"
+			
+			,
+			
+			"https://github.com/calvinmetcalf/lie"
+			
+		]
+		
+	}	
 	
 	,tools = { // --> tools
 		
@@ -296,12 +326,16 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 		this.password = null;
 		
+	// --> Riferimento globale allo sviluppatore
+	
+		this.dev = dev;
+		
 	// --> Restituisco me stesso per concatenare funzioni
 		
 		return this;
 		
 	};
-	
+		
 /// --> Aggiungo record ed eseguo un callback alla fine
 	
 	localdbclass.prototype.add = function( tablename, records ){
