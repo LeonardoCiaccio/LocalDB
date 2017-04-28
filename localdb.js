@@ -358,9 +358,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 		// --> Mi faccio un giro per ogni record
 
-			var myerr 	    = 0
-
-				,newrecords = [];
+			var newrecords = [];
 
 			for( var i = 0; i < records.length; i++ ){
 
@@ -368,13 +366,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			// --> Potrei avere un valore unique, devo controllare
 
-				if( !tools.isUnique( mytable, record ) ){
-
-					myerr = 1;
-
-					continue;
-
-				}
+				if( !tools.isUnique( mytable, record ) )continue;
 
 			// --> Aggiungo l'ID consecutivo al record
 
