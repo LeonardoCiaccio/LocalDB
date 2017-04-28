@@ -1,7 +1,5 @@
 /* 
 
-	ATTENZIONE PER LA MINIFICAZIONE USA https://jscompress.com/
-
 	Nome db + sign + nome tabella = "Negozio-Clienti" ; "Negozio-"
 	
 	CODICI DI ERRORE : 
