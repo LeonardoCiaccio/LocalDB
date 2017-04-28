@@ -1,6 +1,6 @@
 /* 
 
-	ATTENZIONE PER LA MINIFICAZIONE USA https://jscompress.com/
+	ATTENZIONE PER LA COMPRESSIONE USA https://jscompress.com/
 
 	Nome db + sign + nome tabella = "Negozio-Clienti" ; "Negozio-"
 	
@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.0.5"
+		version : "1.0.0.6"
 		
 		,
 		
