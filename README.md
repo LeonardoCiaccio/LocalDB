@@ -45,31 +45,31 @@ db.password;
 
 db.change( tablename, recordschanged, eventname, mytableobj );
 
-db.add( tablename, records ).then( resolve, reject );
+db.add( tablename, records ).then( resolve( newrecords ), reject( reason ) );
 
-db.update( tablename, records ).then( resolve, reject );
+db.update( tablename, records ).then( resolve( updated ), reject( reason ) );
 
-db.remove( tablename, ids ).then( resolve, reject );
+db.remove( tablename, ids ).then( resolve( deleted ), reject( reason ) );
 
-db.move( tablename, idfrom, idto ).then( resolve, reject );
+db.move( tablename, idfrom, idto ).then( resolve( moved ), reject( reason ) );
 
-db.invert( tablename, idfrom, idto ).then( resolve, reject );
+db.invert( tablename, idfrom, idto ).then( resolve( [ movedfrom, movedto ] ), reject( reason ) );
 
-db.query( tablename, condition, opt ).then( resolve, reject );
+db.query( tablename, condition, opt ).then( resolve( filtered ), reject( reason ) );
 
-db.encryptdb( mypass ).then( resolve, reject );
+db.encryptdb( mypass ).then( resolve, reject( reason ) );
 
-db.decryptdb( mypass ).then( resolve, reject );
+db.decryptdb( mypass ).then( resolve, reject( reason ) );
 
-db.countRecords( tableName ).then( resolve, reject );
+db.countRecords( tableName ).then( resolve( numrecords ), reject( reason ) );
 
-db.export().then( resolve, reject );
+db.export().then( resolve( JSON.stringify( alltable ) ), reject( reason ) );
 
-db.import( alldb ).then( resolve, reject );
+db.import( alldb ).then( resolve, reject( reason ) );
 
-db.clear().then( resolve, reject );
+db.clear().then( resolve( self.name ), reject( reason ) );
 
-db.isEncrypted().then( resolve, reject );
+db.isEncrypted().then( resolve( [ count, cripted ] ), reject( reason ) );
 
 
 ```
