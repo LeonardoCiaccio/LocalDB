@@ -61,6 +61,8 @@ db.encryptdb( mypass ).then( resolve, reject( reason ) );
 
 db.decryptdb( mypass ).then( resolve, reject( reason ) );
 
+db.getTable( tablename );
+
 db.countRecords( tableName ).then( resolve( numrecords ), reject( reason ) );
 
 db.export().then( resolve( JSON.stringify( alltable ) ), reject( reason ) );

@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.0.6"
+		version : "1.0.0.7"
 		
 		,
 		
@@ -893,6 +893,18 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		
 	};
 	
+/// --> Restituisco la tabella come oggetto
+	
+	localdbclass.prototype.getTable = function( tablename ){
+		
+		if( !tablename )throw new Error( "localdbclass.prototype.getTable : Table name required !" );
+		
+		var self = this;
+		
+		return tools.getDBtable( self, tablename );
+		
+	};
+
 /// --> Restituisco il numero di record in una tabella
 	
 	localdbclass.prototype.countRecords = function( tablename ){
