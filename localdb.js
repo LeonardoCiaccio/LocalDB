@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.0.7"
+		version : "1.0.0.8"
 		
 		,
 		
@@ -1001,9 +1001,9 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 				
 	};
 	
-/// --> Rimuove tutto il database
+/// --> Rimuove tutto il database, o una sola tabella
 	
-	localdbclass.prototype.clear = function(){
+	localdbclass.prototype.clear = function( tablename ){
 		
 		var self = this;
 		
@@ -1015,7 +1015,10 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			for( var key in storage ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+				if( 
+					( tablename && key.match( new RegExp( "^" + tablename.toString() + "$", "g" ) ) ) ||
+					( !tablename && key.match( new RegExp( "^" + self.name , "g" ) )  )
+				){
 
 					storage.removeItem( key );
 

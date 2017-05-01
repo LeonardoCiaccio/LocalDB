@@ -69,7 +69,7 @@ db.export().then( resolve( JSON.stringify( alltable ) ), reject( reason ) );
 
 db.import( alldb ).then( resolve, reject( reason ) );
 
-db.clear().then( resolve( self.name ), reject( reason ) );
+db.clear( tablename ).then( resolve( self.name ), reject( reason ) );
 
 db.isEncrypted().then( resolve( [ count, cripted ] ), reject( reason ) );
 
