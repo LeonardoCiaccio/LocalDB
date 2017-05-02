@@ -37,9 +37,11 @@ I nomi delle funzioni e i parametri descrivono e rendono l'idea di cosa fanno, i
 ```javascript
 
 
-db.dev
+db.dev;
 
-db.name
+db.name;
+
+db.storage;
 
 db.password;
 
@@ -67,7 +69,7 @@ db.countRecords( tableName ).then( resolve( numrecords ), reject( reason ) );
 
 db.export().then( resolve( JSON.stringify( alltable ) ), reject( reason ) );
 
-db.import( alldb ).then( resolve, reject( reason ) );
+db.import( alldb ).then( resolve(), reject( reason ) );
 
 db.clear( tablename ).then( resolve( self.name ), reject( reason ) );
 

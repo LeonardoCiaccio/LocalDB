@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.0.8"
+		version : "1.0.0.9"
 		
 		,
 		
@@ -504,10 +504,15 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 				} );
 
-				deleted.push( mytable[ index ] );
+				if( index > -1 ){
 
-				mytable.splice( index, 1 );
+					deleted.push( mytable[ index ] );
 
+				// --> Esiste sicuro
+
+					mytable.splice( index, 1 );
+
+				}
 
 			} // <-- for ids
 
