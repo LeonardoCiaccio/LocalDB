@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.0.9"
+		version : "1.0.1.0"
 		
 		,
 		
@@ -1021,7 +1021,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			for( var key in storage ){
 
 				if( 
-					( tablename && key.match( new RegExp( "^" + tablename.toString() + "$", "g" ) ) ) ||
+					( tablename && key.match( new RegExp( "^" + self.name + sign + tablename.toString() + "$", "g" ) ) ) ||
 					( !tablename && key.match( new RegExp( "^" + self.name , "g" ) )  )
 				){
 
