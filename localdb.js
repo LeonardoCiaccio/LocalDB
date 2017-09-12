@@ -77,7 +77,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 	
 	,dev = {
 		
-		version : "1.0.1.0"
+		version : "1.0.1.1"
 		
 		,
 		
@@ -1030,6 +1030,10 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 				} // <-- if match
 
 			} // <-- for storage
+
+		// --> Eseguo l'evento change
+
+			self.change( tablename, [], "clear", [] );
 			
 			resolve( self.name );
 			
