@@ -1,18 +1,18 @@
-/* 
+/*
 
 	ATTENZIONE PER LA COMPRESSIONE USA https://jscompress.com/
 
 	Nome db + sign + nome tabella = "Negozio-Clienti" ; "Negozio-"
-	
-	CODICI DI ERRORE : 
-	
+
+	CODICI DI ERRORE :
+
 		1 : Si sta aggiungendo un valore che deve essere univoco e non lo è
-		2 : Si sta tentando di aggiornare un record senza id '#' o con univoco errato		
+		2 : Si sta tentando di aggiornare un record senza id '#' o con univoco errato
 		3 : Durante la rimozione alcuni records non sono stati trovati
 		4 : Si sta muovendo un elemento verso un indice inesistente
 		5 : Non si riesce a trovare l'indice del record da muovere
 		6 : Si vuole spostare un record sullo stesso indice reale
-		
+
 		100 : Errore di decrittazzione mentre si preleva il db
 		101 : Errore di crittazzione mentre si salva il db
 
@@ -68,45 +68,45 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 // <-- Promise
 
 ( function(){
-	
+
 	"use strict";
-	
+
 /// --> Global, opzioni e strumenti di classe
 
 	var sign = ":"
-	
+
 	,dev = {
-		
+
 		version : "1.0.1.1"
-		
+
 		,
-		
+
 		author  : "Leonardo Ciaccio"
-		
+
 		,
-		
+
 		contact : "leonardo.ciaccio@gmail.com"
-		
+
 		,
-		
-		license : "MIT" 
-		
+
+		license : "MIT"
+
 		,
-		
+
 		credits : [
-			
+
 			"code.google.com/p/crypto-js"
-			
+
 			,
-			
+
 			"https://github.com/calvinmetcalf/lie"
-			
+
 		]
-		
-	}	
-	
+
+	}
+
 	,tools = { // --> tools
-		
+
 	// --> Incapsula un processo di cifratura
 
 		encrypt : function( self, decrypted, mypass ){
@@ -119,7 +119,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		}
 
 		,
-		
+
 	// --> Incapsula un processo di decifratura
 
 		decrypt : function( self, encrypted, mypass ){
@@ -130,115 +130,115 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			return CryptoJS.AES.decrypt( encrypted, mypass ).toString( CryptoJS.enc.Utf8 );
 
 		}
- 
+
 		,
-		
+
 	// --> Genero un nuovo ID
-		
+
 		getNextID : function( self, tablename ){
 
 			var mytable = tools.getDBtable( self, tablename );
 
 			if( !mytable )return null;
 
-			return ( mytable.length > 0 ) 
+			return ( mytable.length > 0 )
 				   ? mytable.sort( function( a, b ){
 
 						return ( b[ "#" ] - a[ "#" ] );
 
-				   } )[ 0 ][ "#" ] + 1 
+				   } )[ 0 ][ "#" ] + 1
 				   : 0 ;
 
 		}
-		
+
  		,
- 
+
 	// --> Controlla se una stringa può essere un oggetto JSON, in sintesi controlla se è coerente/cryptato
-		
+
 		isJSON : function( test ){
-			
+
 			try{
-				
+
 				return JSON.parse( test() );
-				
+
 			}catch( e ){
-				
+
 				return null;
-				
+
 			}
-			
+
 		} // <-- isJSON
-		
+
 		,
-		
+
 	// --> Controlla che un record sia univoco in una tabella
-		
+
 		isUnique : function( table, record ){
-			
+
 			return ( !record.unique || record.unique == "" || table.every( function( element, index, array ){
-				
+
 				return ( !element.unique || element.unique != record.unique );
-				
+
 			} ) );
-			
+
 		} // <-- isUnique
-		
+
 		,
-		
+
 	// --> Aggiorna i dati dello storage
-		
+
 		setDBtable : function( self, tablename, data ){
-			
+
 			data = data || [];
-			
+
 			var storage = self.storage
-				
+
 				,db 	= self.name
-			
+
 				,name 	= db + sign + tablename
-			
+
 				;
-			
+
 		// --> Ad ogni modo sovrascrivo se non ci sono errori
-			
-			try{						
-				
+
+			try{
+
 				var encryme = tools.encrypt( self, JSON.stringify( data ) );
-				
+
 				if( !encryme )encryme = JSON.stringify( data );
-			
+
 				storage[ name ] = encryme;
-				
+
 				return true;
-				
+
 			}catch( e ){
-				
-				return false;	
-				
+
+				return false;
+
 			}
-												
+
 		} // <-- getDB
-		
+
 		,
-		
+
 	// --> Preleva i dati dallo storage
-		
+
 		getDBtable : function( self, tablename ){
-			
+
 			var storage  = self.storage
-				
+
 				,db 	 = self.name
-			
+
 				,name	 = db + sign + tablename
-			
+
 				;
-			
+
 		// --> Potrei non avere la tabella
-			
+
 			if( typeof storage[ name ] === "undefined" )return [];
-				
+
 			return this.isJSON( function test(){
-						
+
 				try{
 
 					var decryme = tools.decrypt( self, storage[ name ] );
@@ -252,102 +252,102 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 				}
 
 			} );
-			
+
 		} // <-- getDB
-		
+
 		,
-		
+
 	 // --> Aggiorna un oggetto con dei nuovi valori
-		
+
 		deepMerge : function( to, from ){
-			
+
 			for ( var key in from) {
-				
+
 				try {
-					
+
 				// --> Compatibile con Firefox
-					
+
 					if ( from[ key ].constructor == Object ){
-						
+
 						to[ key ] = deepMerge( to[ key ], from[ key ] );
 
 					}else{
-						  
+
 						to[ key ] = from[ key ];
 
 					}
 
 				}catch( e ){
-					  
+
 					to[ key ] = from[ key ];
 
 				}
 			}
 
 			return to;
-			
+
 		} // <-- deepMerge
-		
+
 	}; // <-- tools;
-	
+
 /// --> La variabile globale con cui lavorare
-	
+
 	var localdbclass = function( newoptions ){
-			
+
 	// --> Se ho l'oggetto adeguato aggiorno le opzioni
-		
+
 		if( typeof newoptions !== "object" )newoptions = {};
-		
+
 	// --> Se per errore resetto lo storage lo riporto al local
-		
+
 		if( newoptions.storage != localStorage && newoptions.storage != sessionStorage ){
-			
+
 			this.storage = localStorage;
-		
+
 		}else{
-			
+
 			this.storage = newoptions.storage;
-			
+
 		}
-		
+
 	// --> Il nome del db è obbligatorio
-		
+
 		this.name = ( typeof newoptions.name !== "string" || newoptions.name == "" )
 					? "localdbclass"
 					: newoptions.name
 					;
-		
+
 	// --> L'evento change deve essere una funzione
-		
+
 		this.change = ( typeof newoptions.change !== "function" )
 					  ? function( tablename, recordschanged, eventname, mytableobj ){}
 					  : newoptions.change
 					  ;
-		
+
 	// --> Inizializzo la password
-	
+
 		this.password = null;
-		
+
 	// --> Riferimento globale allo sviluppatore
-	
+
 		this.dev = dev;
-		
+
 	// --> Restituisco me stesso per concatenare funzioni
-		
+
 		return this;
-		
+
 	};
-		
+
 /// --> Aggiungo record ed eseguo un callback alla fine
-	
+
 	localdbclass.prototype.add = function( tablename, records ){
-			
+
 		if( !tablename )throw new Error( "localdbclass.prototype.add : 'tablename' required !" );
-			
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-		
+
 			records = ( Array.isArray( records ) ) ? records : [ records ];
 
 		// --> Prelevo la tabella, potrebbe essere []
@@ -371,17 +371,17 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			// --> Aggiungo l'ID consecutivo al record
 
 				var newid = tools.getNextID( self, tablename );
-				
+
 				if( newid !== null ){
-					
-					var newrecord = tools.deepMerge( record, { "#" : newid } ); 
+
+					var newrecord = tools.deepMerge( record, { "#" : newid } );
 
 				// --> Aggiungo il record alla tabella
 
 					mytable.push( newrecord );
 
 					newrecords.push( newrecord );
-					
+
 				}
 
 			} // <-- forEach
@@ -397,21 +397,21 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			self.change( tablename, newrecords, "add", mytable );
 
 			return resolve( newrecords );
-			
+
 		} );
-			
+
 	};
-	
+
 /// --> Aggiorno un record
-	
+
 	localdbclass.prototype.update = function( tablename, records ){
-			
+
 		if( !tablename )throw new Error( "localdbclass.prototype.update : 'tablename' required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-		
+
 			records = ( Array.isArray( records ) ) ? records : [ records ];
 
 		// --> Prelevo la tabella, potrebbe essere []
@@ -467,22 +467,22 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			self.change( tablename, updated, "update", mytable );
 
 			return resolve( updated );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Effettuo una ricerca nel database
-	
+
 	localdbclass.prototype.remove = function( tablename, ids ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.remove : Table name required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
-			ids = ( Array.isArray( ids ) ) ? ids : [ ids ]; 
+
+			ids = ( Array.isArray( ids ) ) ? ids : [ ids ];
 
 		// --> Prelevo la tabella, potrebbe essere []
 
@@ -529,25 +529,25 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		// --> Restituisco me stesso per concatenare funzioni
 
 			return resolve( deleted );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Sposto un record in una nuova posizione
-	
+
 	localdbclass.prototype.move = function( tablename, idfrom, idto ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.move : Table name required !" );
-				
+
 		if( !( idfrom > -1 ) || !( idto > -1 ) )throw new Error( "localdbclass.prototype.move : ID required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 		// --> Prelevo la tabella, potrebbe essere []
-		
+
 			var mytable = tools.getDBtable( self, tablename );
 
 			if( !mytable )return reject( 100 );
@@ -585,7 +585,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			var response = tools.setDBtable( self, tablename, mytable );
 
 			if( !response )return reject( 101 );
-			
+
 		// --> Eseguo l'evento change con il record in questione
 
 			self.change( tablename, moved, "move", mytable );
@@ -593,25 +593,25 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		// --> Restituisco me stesso per concatenare funzioni
 
 			return resolve( moved );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Sposto di posizione 2 record
-	
+
 	localdbclass.prototype.invert = function( tablename, idfrom, idto ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.invert : Table name required !" );
-		
+
 		if( !( idfrom > -1 ) || !( idto > -1 ) )throw new Error( "localdbclass.prototype.invert : ID required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 		// --> Prelevo la tabella, potrebbe essere []
-		
+
 			var mytable = tools.getDBtable( self, tablename );
 
 			if( !mytable )return reject( 100 );
@@ -677,21 +677,21 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		// --> Restituisco me stesso per concatenare funzioni
 
 			return resolve( [ movedfrom, movedto ] );
-			
+
 		} );
-				
+
 	};
-	
+
 /// --> Effettuo un giro in una tabella
-	
+
 	localdbclass.prototype.query = function( tablename, condition, opt ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.query : Table name required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 			if( typeof condition !== "function" )condition = function(){ return true; };
 
 			if( !opt )opt = {};
@@ -765,23 +765,23 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			}
 
 			return resolve( response );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Crypto tutto il mio db
-	
+
 	localdbclass.prototype.encryptdb = function( mypass ){
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var storage 	 = self.storage
 
 			,teststorage = {};
-		
+
 		// --> Faccio un giro di prova per valutare che tutti i db si possano cifrare, altrimenti non cambio nulla
 
 			for( var key in storage ){
@@ -815,19 +815,19 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			} // <-- for storage
 
 			return resolve();
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Decrypto tutto il mio db
-	
+
 	localdbclass.prototype.decryptdb = function( mypass ){
-		
+
 		var self = this;
-						
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var storage      = self.storage
 
 			,teststorage = {};
@@ -872,7 +872,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 							return reject();
 
-						}								
+						}
 
 					}catch( e ){
 
@@ -893,51 +893,51 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			} // <-- for storage
 
 			return resolve();
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Restituisco la tabella come oggetto
-	
+
 	localdbclass.prototype.getTable = function( tablename ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.getTable : Table name required !" );
-		
+
 		var self = this;
-		
+
 		return tools.getDBtable( self, tablename );
-		
+
 	};
 
 /// --> Restituisco il numero di record in una tabella
-	
+
 	localdbclass.prototype.countRecords = function( tablename ){
-		
+
 		if( !tablename )throw new Error( "localdbclass.prototype.countRecords : Table name required !" );
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var mytable = tools.getDBtable( self, tablename );
-		
+
 			if( !mytable )return reject( 100 );
 
 			return resolve( mytable.length );
-			
+
 		} );
-				
+
 	};
-	
-/// --> Esporta il database
-	
-	localdbclass.prototype.export = function(){
-		
+
+/// --> Controllo che non sia vuoto
+
+	localdbclass.prototype.isEmpty = function(){
+
 		var self = this;
-				
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var storage = self.storage
 
 			,alltable 	= [];
@@ -956,24 +956,58 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 				} // <-- if match
 
-			} // <-- for storage	
+			} // <-- for storage
+
+			resolve( ( alltable.length < 1 ) );
+
+		} );
+
+	};
+
+/// --> Esporta il database
+
+	localdbclass.prototype.export = function(){
+
+		var self = this;
+
+		return new Promise( function( resolve, reject ){
+
+			var storage = self.storage
+
+			,alltable 	= [];
+
+		// --> Raccolgo tutte le tabelle di questo DB
+
+			for( var key in storage ){
+
+				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+
+					var table = {};
+
+					table[ key ] = storage[ key ];
+
+					alltable.push( table );
+
+				} // <-- if match
+
+			} // <-- for storage
 
 			if( alltable.length < 1 )resolve( null );
 
 			resolve( JSON.stringify( alltable ) );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Importa un db database
-	
+
 	localdbclass.prototype.import = function( alldb ){
-		
+
 		var self = this;
-			
+
 		return new Promise( function( resolve, reject ){
-    	
+
 			var storage = self.storage;
 
 		// --> Raccolgo tutte le tabelle di questo DB
@@ -999,28 +1033,28 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 				reject( "localdbclass.prototype.import : problems on import" );
 
 			}
-			
+
 			resolve();
-			
+
   		} ); // <-- Promise
-				
+
 	};
-	
+
 /// --> Rimuove tutto il database, o una sola tabella
-	
+
 	localdbclass.prototype.clear = function( tablename ){
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var storage = self.storage;
 
 		// --> Raccolgo tutte le tabelle di questo DB
 
 			for( var key in storage ){
 
-				if( 
+				if(
 					( tablename && key.match( new RegExp( "^" + self.name + sign + tablename.toString() + "$", "g" ) ) ) ||
 					( !tablename && key.match( new RegExp( "^" + self.name , "g" ) )  )
 				){
@@ -1034,27 +1068,27 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		// --> Eseguo l'evento change
 
 			self.change( tablename, [], "clear", [] );
-			
+
 			resolve( self.name );
-			
+
 		} );
-		
+
 	};
-	
+
 /// --> Controlla se il db è cryptato
-	
+
 	localdbclass.prototype.isEncrypted = function(){
-		
+
 		var self = this;
-		
+
 		return new Promise( function( resolve, reject ){
-			
+
 			var storage = self.storage
-			
+
 			,count   = 0
-			
+
 			,cripted = 0
-			
+
 			;
 
 		// --> Raccolgo tutte le tabelle di questo DB
@@ -1062,45 +1096,37 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 			for( var key in storage ){
 
 				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
-					
+
 					count++;
-					
+
 					if( tools.isJSON( function test(){
-						
+
 						try{
-							
+
 							var decryme = decrypt( storage[ key ] );
-							
+
 							return ( !decryme ) ? storage[ key ] : decryme;
-							
+
 						}catch( e ){
-							
+
 							return storage[ key ];
-							
+
 						}
-						
+
 					} ) === null )cripted++;
 
 				} // <-- if match
 
 			} // <-- for storage
-						
+
 			resolve( [ count, cripted ] );
-			
+
 		} );
-		
+
 	};
-		
+
 /// --> Rendo disponibile l'oggetto
-	
+
 	window.localdb = localdbclass;
-	
+
 } )();
-
-
-
-
-
-
-
-

@@ -15,11 +15,11 @@ var db = new window.localdb( {
     storage: localStorage
 
 	,
-	
+
 // --> Il nome del database
 
     name: "LocalDB"
-	
+
 	,
 
 // --> Questa funzione viene chiamata ogni volta che ci sono variazioni
@@ -30,7 +30,7 @@ var db = new window.localdb( {
 
 ```
 
-### LocalDB espone alcune funzioni, solo dopo essere stata istanziata 
+### LocalDB espone alcune funzioni, solo dopo essere stata istanziata
 
 I nomi delle funzioni e i parametri descrivono e rendono l'idea di cosa fanno, in perfetto stile `Promise`
 
@@ -44,6 +44,8 @@ db.name;
 db.storage;
 
 db.password;
+
+db.isEmpty();
 
 db.change( tablename, recordschanged, eventname, mytableobj );
 
@@ -86,13 +88,13 @@ ed ecco un semplice esempio
 var negozio1 = new localdb( {
 
 	name : "Il Mio Negozio 1"
-	
+
 	,
-	
+
 	change : function( tablename, recordschanged, eventname, mytableobj ){
-	
+
 		console.log( "DB 'Il Mio Negozio 1' [" + tablename + "] modificato !" );
-	
+
 	}
 
 } );
@@ -100,13 +102,13 @@ var negozio1 = new localdb( {
 var negozio2 = new localdb( {
 
 	name : "Il Mio Negozio 2"
-	
+
 	,
-	
+
 	change : function( tablename, recordschanged, eventname, mytableobj ){
-	
+
 		console.log( "DB 'Il Mio Negozio 2' [" + tablename + "] modificato !" );
-	
+
 	}
 
 } );
