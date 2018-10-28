@@ -786,7 +786,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			for( var key in storage ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+				if( key.match( new RegExp( "^" + self.name + sign , "g" ) ) ){
 
 					try{
 
@@ -836,7 +836,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			for( var key in storage ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+				if( key.match( new RegExp( "^" + self.name + sign, "g" ) ) ){
 
 				// --> Potrebbe essere in chiaro
 
@@ -946,7 +946,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
     for( var key in storage ){
 
-      if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+      if( key.match( new RegExp( "^" + self.name + sign , "g" ) ) ){
 
         var table = {};
 
@@ -978,7 +978,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			for( var key in storage ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+				if( key.match( new RegExp( "^" + self.name + sign , "g" ) ) ){
 
 					var table = {};
 
@@ -1075,7 +1075,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 				if(
 					( tablename && key.match( new RegExp( "^" + self.name + sign + tablename.toString() + "$", "g" ) ) ) ||
-					( !tablename && key.match( new RegExp( "^" + self.name , "g" ) )  )
+					( !tablename && key.match( new RegExp( "^" + self.name + sign , "g" ) )  )
 				){
 
 					storage.removeItem( key );
@@ -1114,7 +1114,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			for( var key in storage ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+				if( key.match( new RegExp( "^" + self.name + sign , "g" ) ) ){
 
 					count++;
 
