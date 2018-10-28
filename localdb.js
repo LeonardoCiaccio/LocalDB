@@ -934,33 +934,31 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 	localdbclass.prototype.isEmpty = function(){
 
-		var self = this;
+		var
+        self = this
 
-		return new Promise( function( resolve, reject ){
+        ,storage = self.storage
 
-			var storage = self.storage
+        ,alltable 	= []
+    ;
 
-			,alltable 	= [];
+  // --> Raccolgo tutte le tabelle di questo DB
 
-		// --> Raccolgo tutte le tabelle di questo DB
+    for( var key in storage ){
 
-			for( var key in storage ){
+      if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
 
-				if( key.match( new RegExp( "^" + self.name , "g" ) ) ){
+        var table = {};
 
-					var table = {};
+        table[ key ] = storage[ key ];
 
-					table[ key ] = storage[ key ];
+        alltable.push( table );
 
-					alltable.push( table );
+      } // <-- if match
 
-				} // <-- if match
+    } // <-- for storage
 
-			} // <-- for storage
-
-			resolve( ( alltable.length < 1 ) );
-
-		} );
+    return( ( alltable.length < 1 ) );
 
 	};
 
