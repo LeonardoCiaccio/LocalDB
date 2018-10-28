@@ -1016,7 +1016,10 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			try{
 
-				var allmydb = JSON.parse( alldb );
+				var
+						allmydb = JSON.parse( alldb )
+						,finded
+				;
 
 				allmydb.forEach( function( table ){
 
@@ -1026,7 +1029,25 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 					}catch( e ){}
 
+					try {
+
+					// --> La prima tabella nomina il database
+
+						if( !finded ){
+
+              var tmp = Object.keys( table ).toString();
+
+              finded = tmp.split( ":" )[ 0 ];
+
+            }
+
+					}catch( e ){
+
+					}
+
 				} );
+
+				if( finded )self.name = finded;
 
 			}catch( e ){
 
@@ -1034,7 +1055,7 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 			}
 
-			resolve();
+			resolve( self.name );
 
   		} ); // <-- Promise
 
