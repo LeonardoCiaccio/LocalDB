@@ -47,6 +47,8 @@ db.password;
 
 db.isEmpty();
 
+db.initialize( tablename ).then( resolve(), reject( reason ) );
+
 db.change( tablename, recordschanged, eventname, mytableobj );
 
 db.add( tablename, records ).then( resolve( newrecords ), reject( reason ) );

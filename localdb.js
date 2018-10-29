@@ -402,6 +402,32 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 	};
 
+	/// --> Inizializzo una nuova tabella
+
+		localdbclass.prototype.initialize = function( tablename ){
+
+			if( !tablename )throw new Error( "localdbclass.prototype.add : 'tablename' required !" );
+
+			var self = this;
+
+			return new Promise( function( resolve, reject ){
+
+			// --> Inserisco la tabella nel database
+
+				var response = tools.setDBtable( self, tablename, [] );
+
+				if( !response )return reject( 101 );
+
+			// --> Eseguo l'evento change con i records in questione
+
+				self.change( tablename, [], "initialize", [] );
+
+				return resolve();
+
+			} );
+
+		};
+
 /// --> Aggiorno un record
 
 	localdbclass.prototype.update = function( tablename, records ){
